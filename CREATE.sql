@@ -2,8 +2,8 @@ create table STUDENT(
 	W_Nbr varchar(8) not null,
 	Name varchar (60) not null,
 	Major varchar (50) not null,
-	Gender varchar(10) NOT NULL check (Gender in('M', 'F')),
-	Year varchar (20) check(Year in('Freshman', 'Sophmore','Junior','Senior')),
+	Gender varchar(10) not null check (Gender in('M', 'F')),
+	Year varchar (20) not null check(Year in('Freshman', 'Sophomore','Junior','Senior')),
 	Gpa float not null,
 	primary key (W_Nbr)
 );
@@ -13,15 +13,15 @@ create table DEPARTMENT(
 	primary key(Dept_Name)
 );
 create table INSTRUCTOR(
-	Id int identity(1,1) not null,
+	Id int identity not null primary key,
 	Name varchar(64) not null,
 	Dept_Name varchar(4) not null,
-	primary key(Id),
 	foreign key(Dept_Name) references DEPARTMENT(Dept_Name)
 );
 create table ADVISOR(
 	W_Nbr varchar(8) not null,
-	I_Id int primary key not null,
+	I_Id int not null,
+	primary key(W_Nbr,I_Id),
 	foreign key(I_Id) references INSTRUCTOR(Id),
 	foreign key (W_Nbr) references STUDENT(W_Nbr)
 );
@@ -42,7 +42,7 @@ create table PREREQ(
 create table TAKE (
 	W_Nbr varchar(8) not null,
 	Sec_Id int not null,
-	Grade char not null check (Grade in('A', 'B','C','D','F','W')),
+	Grade char null check (Grade in('A', 'B','C','D','F','W')),
 	primary key (W_Nbr,Sec_Id),
 	foreign key(W_Nbr) references STUDENT(W_Nbr)
 );
@@ -58,13 +58,13 @@ create table TIME_SLOT(
 );
 
 create table SECTION(
-	Id int identity(1,1) not null,
+	Id int identity not null,
 	C_Nbr varchar(8) not null,
 	Sec_Nbr int not null,
 	Semester varchar(6) not null check (Semester in('Spring','Summer','Fall')),
 	Year  int not null ,
 	Building varchar(16) not null,
-	Room_Nbr int not null,
+	Room_Nbr int,
 	TimeSlot_Id int not null,
 	Instructor_Id int not null,
 	primary key(Id),
